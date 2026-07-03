@@ -25,6 +25,9 @@ export function moverDisco(origem, destino) {
   if (!_base)
     throw new Error("Não é mover sobre obter estado não inicializado");
 
+  if ([origem, destino].some(nomeHaste => !NOMES_HASTES.includes(nomeHaste)))
+    throw new Error("Origem ou destion só podem ser 'a' ou 'b'");
+
   const discosOrigem = _base[origem].discos;
   const discosDestino = _base[destino].discos;
 
@@ -54,7 +57,7 @@ export function obterEstado() {
   if (!_base) throw new Error("Não é possível obter estado não inicializado");
 
   const copiarHaste = (haste) => ({
-    discos: [...haste.discos.map((disco) => structuredClone(disco))]
+    discos: [...haste.discos.map((disco) => structuredClone(disco))],
   });
 
   return {
