@@ -7,7 +7,7 @@ export class TorreHanoi {
   _qtdDiscos = null;
   _base = null;
 
-  constructor(qtdDiscos = 5) {
+  constructor(qtdDiscos) {
     this._qtdDiscos = qtdDiscos;
 
     const discosIniciais = Array.from({ length: this._qtdDiscos }, (_, i) => {

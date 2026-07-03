@@ -1,0 +1,6 @@
+
+.tabuleiro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(var(--discos), 40px);
+}

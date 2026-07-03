@@ -1,5 +1,10 @@
 import { TorreHanoi } from "../services/torre-hanoi.js";
 
+// Seta propriedade css
+const quantidadeDiscos = 8;
+const tabuleiro = document.querySelector(".tabuleiro");
+tabuleiro.style.setProperty("--discos", quantidadeDiscos);
+
 // Sequência de instruções
 
 const solucaoParaCincoDiscos = [
@@ -10,7 +15,7 @@ const solucaoParaCincoDiscos = [
 
 // Simulação
 
-const torreHanoi = new TorreHanoi();
+const torreHanoi = new TorreHanoi(quantidadeDiscos);
 
 imprimirRetorno(torreHanoi);
 
