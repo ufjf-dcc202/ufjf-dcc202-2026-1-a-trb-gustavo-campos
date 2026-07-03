@@ -22,6 +22,34 @@ export function inicializar(qtdDiscos = 5) {
   };
 }
 
+export function moverDisco(origem, destino) {
+  if (!_base) return { sucesso: false, erro: "O estado não foi inicializado" };
+
+  const discosOrigem = _base[origem].discos;
+  const discosDestino = _base[destino].discos;
+
+  // Validação
+
+  const discoOrigem = discosOrigem.at(-1);
+  const discoDestino = discosDestino.at(-1);
+
+  if (!discoOrigem)
+    return { sucesso: false, erro: "Não há disco na origem para mover" };
+
+  if (discoDestino && discoOrigem.tamanho > discoDestino.tamanho)
+    return {
+      sucesso: false,
+      erro: "O disco de origem é maior que o disco no topo do destino",
+    };
+
+  // Movimentação
+
+  discosOrigem.pop();
+  discosDestino.push(discoOrigem);
+
+  return { sucesso: true };
+}
+
 export function obterRepresentacao() {
   if (!_base)
     throw new Error("Não é possível renderizar estado não inicializado");
