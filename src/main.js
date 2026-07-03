@@ -1,12 +1,16 @@
 import { TorreHanoi } from "../services/torre-hanoi.js";
 
-const torreHanoi = new TorreHanoi();
+// Sequência de instruções
 
 const solucaoParaCincoDiscos = [
-  { origem: "a", destino: "c" },
-  { origem: "a", destino: "b" },
-  { origem: "c", destino: "b" },
+    { origem: "a", destino: "c" },
+    { origem: "a", destino: "b" },
+    { origem: "c", destino: "b" },
 ];
+
+// Simulação
+
+const torreHanoi = new TorreHanoi();
 
 console.log(torreHanoi.toString());
 
@@ -17,6 +21,8 @@ for (const instrucao of solucaoParaCincoDiscos) {
   processsarResultado(resultado);
   console.log(torreHanoi.toString());
 }
+
+// Auxiliares
 
 function imprimirRetorno() {
   console.log(torreHanoi.toString());
