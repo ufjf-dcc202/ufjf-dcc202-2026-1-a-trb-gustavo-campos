@@ -1,4 +1,3 @@
-
 const EMPTY_CHAR = "|";
 const NOMES_HASTES = ["a", "b", "c"];
 
@@ -9,7 +8,7 @@ let _base = null;
 
 export function inicializar(qtdDiscos = 5) {
   _qtdDiscos = qtdDiscos;
-  
+
   const discosIniciais = Array.from({ length: _qtdDiscos }, (_, i) => {
     const tamanho = _qtdDiscos - i;
     return { tamanho };
@@ -23,7 +22,8 @@ export function inicializar(qtdDiscos = 5) {
 }
 
 export function moverDisco(origem, destino) {
-  if (!_base) return { sucesso: false, erro: "O estado não foi inicializado" };
+  if (!_base)
+    throw new Error("Não é mover sobre obter estado não inicializado");
 
   const discosOrigem = _base[origem].discos;
   const discosDestino = _base[destino].discos;
@@ -50,15 +50,29 @@ export function moverDisco(origem, destino) {
   return { sucesso: true };
 }
 
+export function obterEstado() {
+  if (!_base) throw new Error("Não é possível obter estado não inicializado");
+
+  const copiarHaste = (haste) => ({
+    discos: [...haste.discos.map((disco) => structuredClone(disco))]
+  });
+
+  return {
+    a: copiarHaste(_base.a),
+    b: copiarHaste(_base.b),
+    c: copiarHaste(_base.c),
+  };
+}
+
 export function obterRepresentacao() {
   if (!_base)
     throw new Error("Não é possível renderizar estado não inicializado");
-  
+
   let totalStr = "";
 
   for (let level = _qtdDiscos; level > 0; level--) {
     for (const nomeHaste of NOMES_HASTES) {
-      const disco = _base[nomeHaste].discos[level-1];
+      const disco = _base[nomeHaste].discos[level - 1];
       const char = disco?.tamanho ?? EMPTY_CHAR;
       totalStr += char + "  ";
     }
