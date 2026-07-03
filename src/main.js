@@ -12,19 +12,17 @@ const solucaoParaCincoDiscos = [
 
 const torreHanoi = new TorreHanoi();
 
-console.log(torreHanoi.toString());
-
-imprimirRetorno();
+imprimirRetorno(torreHanoi);
 
 for (const instrucao of solucaoParaCincoDiscos) {
   const resultado = torreHanoi.moverDisco(instrucao.origem, instrucao.destino);
   processsarResultado(resultado);
-  console.log(torreHanoi.toString());
+  imprimirRetorno(torreHanoi);
 }
 
 // Auxiliares
 
-function imprimirRetorno() {
+function imprimirRetorno(torreHanoi) {
   console.log(torreHanoi.toString());
 }
 
