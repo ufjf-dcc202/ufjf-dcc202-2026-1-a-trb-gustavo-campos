@@ -1,6 +1,6 @@
-import { inicializar, moverDisco, obterRepresentacao } from "../services/torre-hanoi.js";
+import { TorreHanoi } from "../services/torre-hanoi.js";
 
-inicializar(5);
+const torreHanoi = new TorreHanoi();
 
 const solucaoParaCincoDiscos = [
   { origem: "a", destino: "c" },
@@ -8,18 +8,20 @@ const solucaoParaCincoDiscos = [
   { origem: "c", destino: "b" },
 ];
 
+console.log(torreHanoi.toString());
+
 imprimirRetorno();
 
 for (const instrucao of solucaoParaCincoDiscos) {
-    const resultado = moverDisco(instrucao.origem, instrucao.destino);
-    processsarResultado(resultado)
-    imprimirRetorno();
+  const resultado = torreHanoi.moverDisco(instrucao.origem, instrucao.destino);
+  processsarResultado(resultado);
+  console.log(torreHanoi.toString());
 }
 
 function imprimirRetorno() {
-    console.log(obterRepresentacao());
+  console.log(torreHanoi.toString());
 }
 
 function processsarResultado(resultado) {
-    if (!resultado.sucesso) throw new Error(resultado.erro);
+  if (!resultado.sucesso) throw new Error(resultado.erro);
 }
