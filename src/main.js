@@ -1,4 +1,4 @@
-import { inicializar, moverDisco, renderizar } from "../services/torre-hanoi.js";
+import { inicializar, moverDisco, obterRepresentacao } from "../services/torre-hanoi.js";
 
 inicializar();
 
@@ -17,7 +17,7 @@ for (const instrucao of solucaoParaCincoDiscos) {
 }
 
 function imprimirRetorno() {
-    console.log(renderizar());
+    console.log(obterRepresentacao());
 }
 
 function processsarResultado(resultado) {
