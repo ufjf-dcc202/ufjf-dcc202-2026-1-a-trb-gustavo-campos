@@ -21,3 +21,22 @@ export function inicializar(qtdDiscos = 5) {
     c: { discos: [] },
   };
 }
+
+export function obterRepresentacao() {
+  if (!_base)
+    throw new Error("Não é possível renderizar estado não inicializado");
+  
+  let totalStr = "";
+
+  for (let level = _qtdDiscos; level > 0; level--) {
+    for (const nomeHaste of NOMES_HASTES) {
+      const disco = _base[nomeHaste].discos[level-1];
+      const char = disco?.tamanho ?? EMPTY_CHAR;
+      totalStr += char + "  ";
+    }
+
+    totalStr += "\n";
+  }
+
+  return totalStr;
+}
