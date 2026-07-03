@@ -1,6 +1,6 @@
 import { inicializar, moverDisco, obterRepresentacao } from "../services/torre-hanoi.js";
 
-inicializar();
+inicializar(5);
 
 const solucaoParaCincoDiscos = [
   { origem: "a", destino: "c" },
@@ -8,7 +8,7 @@ const solucaoParaCincoDiscos = [
   { origem: "c", destino: "b" },
 ];
 
-imprimirRetorno()
+imprimirRetorno();
 
 for (const instrucao of solucaoParaCincoDiscos) {
     const resultado = moverDisco(instrucao.origem, instrucao.destino);
