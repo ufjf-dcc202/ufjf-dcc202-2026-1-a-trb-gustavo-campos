@@ -1,5 +1,26 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: cornflowerblue;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: auto;
+    justify-items: center;
+    align-items: center;
+}
+
 .tabuleiro {
   display: grid;
+  width: 100%;
   gap: 2px 20px;
   justify-items: center;
   grid-template-columns: repeat(3, 1fr);
