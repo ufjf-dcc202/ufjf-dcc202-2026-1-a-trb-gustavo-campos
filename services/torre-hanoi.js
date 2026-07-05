@@ -53,16 +53,26 @@ export class TorreHanoi {
     return { sucesso: true };
   }
 
-  obterEstado() {
-    const copiarHaste = (haste) => ({
-      discos: [...haste.discos.map((disco) => structuredClone(disco))],
-    });
+  // obterEstado() {
+  //   const copiarHaste = (haste) => ({
+  //     discos: [...haste.discos.map((disco) => structuredClone(disco))],
+  //   });
 
-    return {
-      a: copiarHaste(this._base.a),
-      b: copiarHaste(this._base.b),
-      c: copiarHaste(this._base.c),
-    };
+  //   return {
+  //     a: copiarHaste(this._base.a),
+  //     b: copiarHaste(this._base.b),
+  //     c: copiarHaste(this._base.c),
+  //   };
+  // }
+
+  obterPosicoesDiscos() {
+    return Object.entries(this._base).flatMap (([nomeHaste, hastes]) => {
+      return hastes.discos.map((disco, ordem) => ({
+        nomeHaste,
+        ordem,
+        tamanho: disco.tamanho,
+      }));
+    });
   }
 
   toString() {
@@ -79,5 +89,9 @@ export class TorreHanoi {
     }
 
     return totalStr;
+  }
+
+  get qtdDiscos() {
+    return this._qtdDiscos;
   }
 }
