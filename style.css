@@ -1,35 +1,42 @@
 .tabuleiro {
   display: grid;
+  gap: 2px 20px;
+  justify-items: center;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(var(--discos), 40px);
-  gap: 20px;
+}
+
+.disco {
+  display: flex;
+  background-color: black;
 }
 
 .disco[data-tamanho="1"] {
   background-color: green;
+  width: 25%;
 }
 
 .disco[data-tamanho="2"] {
   background-color: red;
+  width: 40%;
 }
 
 .disco[data-tamanho="3"] {
   background-color: orange;
+  width: 55%;
 }
 
 .disco[data-tamanho="4"] {
   background-color: yellow;
+  width: 70%;
 }
 
 .disco[data-tamanho="5"] {
   background-color: greenyellow;
+  width: 85%;
 }
 
 .disco[data-tamanho="6"] {
   background-color: navy;
-}
-
-/* Fallback */
-.disco {
-  background-color: black;
+  width: 100%;
 }
