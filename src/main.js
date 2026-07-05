@@ -15,14 +15,12 @@ const movimentos = [
 const torreHanoi = new TorreHanoi(QTD_DISCOS);
 const elementosVisualizacao = inicializarVisualizacao(torreHanoi);
 
-imprimirTabuleiro(torreHanoi) ;
-
 for (const instrucao of movimentos) {
   const resultado = torreHanoi.moverDisco(instrucao.origem, instrucao.destino);
   atualizarVisualizacao(torreHanoi, elementosVisualizacao);
 }
 
-// Auxiliares
+// Visualização
 
 function inicializarVisualizacao(torreHanoi) {
   const tabuleiro = document.querySelector(".tabuleiro");
