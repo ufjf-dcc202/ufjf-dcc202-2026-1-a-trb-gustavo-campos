@@ -1,36 +1,63 @@
 import { TorreHanoi } from "../services/torre-hanoi.js";
 
-// Seta propriedade css
-const quantidadeDiscos = 8;
-const tabuleiro = document.querySelector(".tabuleiro");
-tabuleiro.style.setProperty("--discos", quantidadeDiscos);
+const QTD_DISCOS = 5;
 
 // Sequência de instruções
 
-const solucaoParaCincoDiscos = [
-    { origem: "a", destino: "c" },
-    { origem: "a", destino: "b" },
-    { origem: "c", destino: "b" },
+const movimentos = [
+  { origem: "a", destino: "c" },
+  { origem: "a", destino: "b" },
+  { origem: "c", destino: "b" },
 ];
 
 // Simulação
 
-const torreHanoi = new TorreHanoi(quantidadeDiscos);
+const torreHanoi = new TorreHanoi(QTD_DISCOS);
+const elementosVisualizacao = inicializarVisualizacao(torreHanoi);
 
-imprimirRetorno(torreHanoi);
+imprimirTabuleiro(torreHanoi) ;
 
-for (const instrucao of solucaoParaCincoDiscos) {
+for (const instrucao of movimentos) {
   const resultado = torreHanoi.moverDisco(instrucao.origem, instrucao.destino);
-  processsarResultado(resultado);
-  imprimirRetorno(torreHanoi);
+  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
 }
 
 // Auxiliares
 
-function imprimirRetorno(torreHanoi) {
-  console.log(torreHanoi.toString());
+function inicializarVisualizacao(torreHanoi) {
+  const tabuleiro = document.querySelector(".tabuleiro");
+  tabuleiro.style.setProperty("--discos", torreHanoi.qtdDiscos);
+
+  const discos = Array.from({ length: torreHanoi.qtdDiscos }, (_, i) => {
+    const disco = document.createElement("div");
+    disco.className = "disco";
+    tabuleiro.appendChild(disco);
+    return disco;
+  });
+
+  const elementosVisualizacao = {
+    tabuleiro,
+    discos,
+  };
+
+  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
+
+  return elementosVisualizacao;
 }
 
-function processsarResultado(resultado) {
-  if (!resultado.sucesso) throw new Error(resultado.erro);
+function atualizarVisualizacao(torreHanoi, elementosVisualizacao) {
+  const dadosDiscos = torreHanoi.obterPosicoesDiscos();
+
+  if (dadosDiscos.length !== elementosVisualizacao.discos.length)
+    throw new Error("Quantidade de discos não esperada");
+
+  const linhaDaOrdem = (ordem) => torreHanoi.qtdDiscos - ordem;
+  const colunaDaHaste = (haste) => ({ a: 1, b: 2, c: 3   })[haste];
+
+  dadosDiscos.forEach((dadosDisco, index) => {
+    const elementoDisco = elementosVisualizacao.discos[index];
+    elementoDisco.style.gridRow = linhaDaOrdem(dadosDisco.ordem);
+    elementoDisco.style.gridColumn = colunaDaHaste(dadosDisco.nomeHaste);
+    elementoDisco.dataset.tamanho = dadosDisco.tamanho;
+  });
 }
