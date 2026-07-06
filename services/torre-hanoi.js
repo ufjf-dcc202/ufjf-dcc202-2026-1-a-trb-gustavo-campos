@@ -1,5 +1,5 @@
 const EMPTY_CHAR = "|";
-const NOMES_HASTES = ["a", "b", "c"];
+export const NOMES_HASTES = ["a", "b", "c"];
 
 // Estado do tabuleiro
 
@@ -26,7 +26,13 @@ export class TorreHanoi {
     if (
       [origem, destino].some((nomeHaste) => !NOMES_HASTES.includes(nomeHaste))
     )
-      throw new Error("Origem ou destion só podem ser 'a' ou 'b'");
+      throw new Error("Origem ou destino só podem ser " + NOMES_HASTES.join(", "));
+
+    if (origem === destino)
+            return {
+        sucesso: false,
+        erro: "A haste de destino deve ser diferente da haste de origem",
+      };
 
     const discosOrigem = this._base[origem].discos;
     const discosDestino = this._base[destino].discos;
@@ -42,7 +48,7 @@ export class TorreHanoi {
     if (discoDestino && discoOrigem.tamanho > discoDestino.tamanho)
       return {
         sucesso: false,
-        erro: "O disco de origem é maior que o disco no topo do destino",
+        erro: "O disco de origem deve ser menor que o disco no topo do destino",
       };
 
     // Movimentação

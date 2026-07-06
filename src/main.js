@@ -1,9 +1,8 @@
-import { TorreHanoi } from "../services/torre-hanoi.js";
+import { NOMES_HASTES, TorreHanoi } from "../services/torre-hanoi.js";
 
 // Constantes
 
 const QTD_DISCOS = 5;
-const NOME_HASTES = ["a", "b", "c"];
 
 // Estado
 
@@ -17,35 +16,38 @@ reiniciar();
 
 // Adiciona listener às hastes
 
-NOME_HASTES.forEach((nomeHaste) => {
+NOMES_HASTES.forEach((nomeHaste) => {
   const elemHaste = elementosVisualizacao.elemHastes[nomeHaste];
   elemHaste.addEventListener("click", (event) => lidarComClique(nomeHaste));
 });
 
 // =================================================================================================
 
-// Input
+// INPUT
 
 function lidarComClique(nomeHaste) {
   if (ultimoClicado) {
-    // console.log(`Mover de ${ultimoClicado} para ${nomeHaste}`);
-    torreHanoi.moverDisco(ultimoClicado, nomeHaste);
+    const resultado = torreHanoi.moverDisco(ultimoClicado, nomeHaste);
+    definirMensagemDeErro(resultado);
     ultimoClicado = null;
   } else {
     ultimoClicado = nomeHaste;
-    // console.log(`Mover de ${nomeHaste}`);
   }
 
   atualizarVisualizacao(torreHanoi, elementosVisualizacao);
 }
 
-// Visualização
+function definirMensagemDeErro(resultado) {
+  if (resultado.sucesso) elementosVisualizacao.logJogo.textContent = "";
+  else elementosVisualizacao.logJogo.textContent = resultado.erro;
+}
+
+// VISUALIZAÇÃO
 
 function reiniciar() {
+  torreHanoi = new TorreHanoi(QTD_DISCOS);
 
   // Obtendo elementos principais
-
-  torreHanoi = new TorreHanoi(QTD_DISCOS);
 
   const elemTabuleiro = document.querySelector(".tabuleiro");
   elemTabuleiro.style.setProperty("--discos", torreHanoi.qtdDiscos);
@@ -58,7 +60,7 @@ function reiniciar() {
 
   // Criando elementos e setando valores padrões nos mesmos
 
-  NOME_HASTES.forEach((nomeHaste) => {
+  NOMES_HASTES.forEach((nomeHaste) => {
     Array.from({ length: torreHanoi.qtdDiscos }, (_, i) => {
       const elemDisco = document.createElement("div");
 
@@ -78,10 +80,14 @@ function reiniciar() {
     c: document.querySelectorAll(".haste-c .disco"),
   };
 
+  // Obtendo log
+  const logJogo = document.querySelector(".log-jogo");
+
   elementosVisualizacao = {
     elemTabuleiro,
     elemHastes,
     elemDiscosDaHaste,
+    logJogo,
   };
 
   atualizarVisualizacao();
