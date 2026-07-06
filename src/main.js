@@ -6,7 +6,7 @@ const QTD_DISCOS = 5;
 
 // Estado
 
-let ultimoClicado = null;
+let hasteSelecionada = null;
 let torreHanoi = null;
 let elementosVisualizacao = null;
 
@@ -18,20 +18,21 @@ reiniciar();
 
 NOMES_HASTES.forEach((nomeHaste) => {
   const elemHaste = elementosVisualizacao.elemHastes[nomeHaste];
-  elemHaste.addEventListener("click", (event) => lidarComClique(nomeHaste));
+  elemHaste.addEventListener("click", (event) => tratarClique(nomeHaste));
 });
 
 // =================================================================================================
 
 // INPUT
 
-function lidarComClique(nomeHaste) {
-  if (ultimoClicado) {
-    const resultado = torreHanoi.moverDisco(ultimoClicado, nomeHaste);
+function tratarClique(nomeHaste) {
+  if (hasteSelecionada) {
+    if (hasteSelecionada === nomeHaste) return;
+    const resultado = torreHanoi.moverDisco(hasteSelecionada, nomeHaste);
     definirMensagemDeErro(resultado);
-    ultimoClicado = null;
+    hasteSelecionada = null;
   } else {
-    ultimoClicado = nomeHaste;
+    hasteSelecionada = nomeHaste;
   }
 
   atualizarVisualizacao(torreHanoi, elementosVisualizacao);
