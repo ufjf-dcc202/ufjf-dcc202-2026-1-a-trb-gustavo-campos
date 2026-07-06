@@ -1,19 +1,51 @@
 import { TorreHanoi } from "../services/torre-hanoi.js";
 
+// Constantes
+
 const QTD_DISCOS = 5;
 const NOME_HASTES = ["a", "b", "c"];
 
-// Simulação
+// Estado
 
-const torreHanoi = new TorreHanoi(QTD_DISCOS);
-const elementosVisualizacao = inicializarVisualizacao(torreHanoi);
+let ultimoClicado = null;
+let torreHanoi = null;
+let elementosVisualizacao = null;
 
-atualizarVisualizacao(torreHanoi, elementosVisualizacao);
+// Inicia
+
+reiniciar();
+
+// Adiciona listener às hastes
+
+NOME_HASTES.forEach((nomeHaste) => {
+  const elemHaste = elementosVisualizacao.elemHastes[nomeHaste];
+  elemHaste.addEventListener("click", (event) => lidarComClique(nomeHaste));
+});
+
+// =================================================================================================
+
+// Input
+
+function lidarComClique(nomeHaste) {
+  if (ultimoClicado) {
+    // console.log(`Mover de ${ultimoClicado} para ${nomeHaste}`);
+    torreHanoi.moverDisco(ultimoClicado, nomeHaste);
+    ultimoClicado = null;
+  } else {
+    ultimoClicado = nomeHaste;
+    // console.log(`Mover de ${nomeHaste}`);
+  }
+
+  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
+}
 
 // Visualização
 
-function inicializarVisualizacao(torreHanoi) {
+function reiniciar() {
+
   // Obtendo elementos principais
+
+  torreHanoi = new TorreHanoi(QTD_DISCOS);
 
   const elemTabuleiro = document.querySelector(".tabuleiro");
   elemTabuleiro.style.setProperty("--discos", torreHanoi.qtdDiscos);
@@ -46,18 +78,16 @@ function inicializarVisualizacao(torreHanoi) {
     c: document.querySelectorAll(".haste-c .disco"),
   };
 
-  const elementosVisualizacao = {
+  elementosVisualizacao = {
     elemTabuleiro,
     elemHastes,
     elemDiscosDaHaste,
   };
 
-  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
-
-  return elementosVisualizacao;
+  atualizarVisualizacao();
 }
 
-function atualizarVisualizacao(torreHanoi, elementosVisualizacao) {
+function atualizarVisualizacao() {
   const dadosDiscos = torreHanoi.obterPosicoesDiscos();
 
   const linhaDaOrdem = (ordem) => torreHanoi.qtdDiscos - ordem;
