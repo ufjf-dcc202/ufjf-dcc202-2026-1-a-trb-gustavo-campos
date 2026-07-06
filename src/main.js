@@ -27,9 +27,10 @@ NOMES_HASTES.forEach((nomeHaste) => {
 
 function tratarClique(nomeHaste) {
   if (hasteSelecionada) {
-    if (hasteSelecionada === nomeHaste) return;
-    const resultado = torreHanoi.moverDisco(hasteSelecionada, nomeHaste);
-    definirMensagemDeErro(resultado);
+    if (hasteSelecionada !== nomeHaste) {
+      const resultado = torreHanoi.moverDisco(hasteSelecionada, nomeHaste);
+      definirMensagemDeErro(resultado);
+    }
     hasteSelecionada = null;
   } else {
     hasteSelecionada = nomeHaste;
