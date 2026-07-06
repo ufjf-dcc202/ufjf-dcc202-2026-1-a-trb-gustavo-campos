@@ -37,9 +37,10 @@ body {
   grid-template-rows: repeat(var(--discos), 40px);
 }
 
-.disco {
+.disco[data-ativo="true"] {
   display: flex;
   background-color: black;
+  width: 100%;
 }
 
 .disco[data-tamanho="1"] {
