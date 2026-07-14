@@ -4,7 +4,6 @@ export const NOMES_HASTES = ["a", "b", "c"];
 // Estado do tabuleiro
 
 export class TorreHanoi {
-  
   _base = {
     a: { discos: [] },
     b: { discos: [] },
@@ -23,20 +22,23 @@ export class TorreHanoi {
       return { tamanho };
     });
 
-    this._base.a.discos = discosIniciais;
+    this._base.a.discos.push(...discosIniciais);
   }
 
   // Public
 
   jogar({ origem, destino }) {
-    if (this._jogadasVoltadas > 0) {
-      // TODO: limpar histórico posterior e zerar jogadas voltadas
-    }
-
     const result = this.moverDisco({ origem, destino });
 
-    // Adicionar ao histórico
     if (result.sucesso) {
+      // Limpar histórico posterior
+      if (this._jogadasVoltadas > 0) {
+        const indiceAtual = this.obterIndiceJogadaSelecionada();
+        this._historico.splice(indiceAtual + 1);
+        this._jogadasVoltadas = 0;
+      }
+
+      // Adicionar ao histórico
       this._historico = [
         ...this._historico,
         {
@@ -79,6 +81,15 @@ export class TorreHanoi {
     });
   }
 
+  obterHistorico() {
+    const indiceSelecionado = this.obterIndiceJogadaSelecionada();
+    const copiaHistorico = this._historico.map((movimento, indice) => ({
+      ...movimento,
+      selecionado: indice === indiceSelecionado,
+    }));
+    return copiaHistorico;
+  }
+
   toString() {
     let totalStr = "";
 
@@ -104,16 +115,18 @@ export class TorreHanoi {
   moverDisco({ origem, destino }) {
     if (
       [origem, destino].some((nomeHaste) => !NOMES_HASTES.includes(nomeHaste))
-    )
+    ) {
       throw new Error(
         "Origem ou destino só podem ser " + NOMES_HASTES.join(", "),
       );
+    }
 
-    if (origem === destino)
+    if (origem === destino) {
       return {
         sucesso: false,
         erro: "A haste de destino deve ser diferente da haste de origem",
       };
+    }
 
     const discosOrigem = this._base[origem].discos;
     const discosDestino = this._base[destino].discos;
@@ -126,11 +139,12 @@ export class TorreHanoi {
     if (!discoOrigem)
       return { sucesso: false, erro: "Não há disco na origem para mover" };
 
-    if (discoDestino && discoOrigem.tamanho > discoDestino.tamanho)
+    if (discoDestino && discoOrigem.tamanho > discoDestino.tamanho) {
       return {
         sucesso: false,
         erro: "O disco de origem deve ser menor que o disco no topo do destino",
       };
+    }
 
     // Movimentação
 
@@ -149,20 +163,21 @@ export class TorreHanoi {
 
   obterJogadaRetrocesso() {
     /* Obtém a jogada responsável por voltar pro estado anterior */
-    const indiceJogadaSelecionada =
-      this._historico.length - 1 - this._jogadasVoltadas;
 
+    const indiceJogadaSelecionada = this.obterIndiceJogadaSelecionada();
     const jogadaSelecionada = this._historico[indiceJogadaSelecionada];
     return this.obterMovimentoInverso(jogadaSelecionada);
   }
 
   obterJogadaAvanco() {
     /* Obtém a jogada responsável por avançar pro próximo estado */
-    const indiceJogadaSelecionada =
-      this._historico.length - 1 - this._jogadasVoltadas;
 
+    const indiceJogadaSelecionada = this.obterIndiceJogadaSelecionada();
     const indiceJogadaProxima = indiceJogadaSelecionada + 1;
-
     return this._historico[indiceJogadaProxima];
+  }
+
+  obterIndiceJogadaSelecionada() {
+    return this._historico.length - 1 - this._jogadasVoltadas;
   }
 }
