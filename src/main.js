@@ -14,13 +14,6 @@ let elementosVisualizacao = null;
 
 reiniciar();
 
-// Adiciona listener às hastes
-
-NOMES_HASTES.forEach((nomeHaste) => {
-  const elemHaste = elementosVisualizacao.elemHastes[nomeHaste];
-  elemHaste.addEventListener("click", (event) => tratarClique(nomeHaste));
-});
-
 // =================================================================================================
 
 // INPUT
@@ -28,10 +21,10 @@ NOMES_HASTES.forEach((nomeHaste) => {
 function tratarClique(nomeHaste) {
   if (hasteSelecionada) {
     if (hasteSelecionada !== nomeHaste) {
-      const resultado = torreHanoi.jogar({ 
-      origem: hasteSelecionada, 
-      destino: nomeHaste
-    });
+      const resultado = torreHanoi.jogar({
+        origem: hasteSelecionada,
+        destino: nomeHaste,
+      });
       definirMensagemDeErro(resultado);
     }
     hasteSelecionada = null;
@@ -42,9 +35,19 @@ function tratarClique(nomeHaste) {
   atualizarVisualizacao(torreHanoi, elementosVisualizacao);
 }
 
+function tratarCliqueVoltar() {
+  torreHanoi.voltar();
+  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
+}
+
+function tratarCliqueAvancar() {
+  torreHanoi.avancar();
+  atualizarVisualizacao(torreHanoi, elementosVisualizacao);
+}
+
 function definirMensagemDeErro(resultado) {
-  if (resultado.sucesso) elementosVisualizacao.logJogo.textContent = "";
-  else elementosVisualizacao.logJogo.textContent = resultado.erro;
+  if (resultado.sucesso) elementosVisualizacao.erroJogo.textContent = "";
+  else elementosVisualizacao.erroJogo.textContent = resultado.erro;
 }
 
 // VISUALIZAÇÃO
@@ -86,13 +89,33 @@ function reiniciar() {
   };
 
   // Obtendo log
-  const logJogo = document.querySelector(".log-jogo");
+  const erroJogo = document.querySelector(".erro-jogo");
+
+  // Obtendo historico
+  const historicoJogo = document.querySelector(".historico-jogo");
+
+  // Obtendo botões
+  const botaoVoltar = document.querySelector(".botao-voltar");
+  const botaoAvancar = document.querySelector(".botao-avancar");
+
+  // Adiciona listener às hastes
+  NOMES_HASTES.forEach((nomeHaste) => {
+    const elemHaste = elemHastes[nomeHaste];
+    elemHaste.addEventListener("click", (event) => tratarClique(nomeHaste));
+  });
+
+  // Adiciona listernet aos botões
+  botaoVoltar.addEventListener("click", (event) => tratarCliqueVoltar());
+  botaoAvancar.addEventListener("click", (event) => tratarCliqueAvancar());
 
   elementosVisualizacao = {
     elemTabuleiro,
     elemHastes,
     elemDiscosDaHaste,
-    logJogo,
+    erroJogo,
+    historicoJogo,
+    botaoVoltar,
+    botaoAvancar,
   };
 
   atualizarVisualizacao();
@@ -103,8 +126,10 @@ function atualizarVisualizacao() {
 
   const linhaDaOrdem = (ordem) => torreHanoi.qtdDiscos - ordem;
   const colunaDaHaste = (haste) => ({ a: 1, b: 2, c: 3 })[haste];
+  const ordemParaIndice = (ordem) => torreHanoi.qtdDiscos - ordem - 1;
 
-  // Resetando
+  // Resetando discos
+
   Object.values(elementosVisualizacao.elemDiscosDaHaste).map((elemDiscos) => {
     elemDiscos.forEach((elemDisco) => {
       elemDisco.dataset.ativo = false;
@@ -112,7 +137,7 @@ function atualizarVisualizacao() {
     });
   });
 
-  const ordemParaIndice = (ordem) => torreHanoi.qtdDiscos - ordem - 1;
+  // Setando discos de acordo com estado
 
   dadosDiscos.forEach((dadosDisco) => {
     const elemDiscos = elementosVisualizacao.elemDiscosDaHaste;
@@ -122,4 +147,17 @@ function atualizarVisualizacao() {
     elemDisco.dataset.ativo = true;
     elemDisco.dataset.tamanho = dadosDisco.tamanho;
   });
+
+  // Setando histórico de acordo com o estado
+
+  const historico = torreHanoi.obterHistorico();
+
+  console.log(historico)
+
+  const stringHistorico = historico.reduce(
+    (acc, movimento) => acc + `\n${movimento.selecionado ? "*" : ""} ${movimento.origem} -> ${movimento.destino}`,
+    "",
+  );
+
+  elementosVisualizacao.historicoJogo.innerText = stringHistorico;
 }

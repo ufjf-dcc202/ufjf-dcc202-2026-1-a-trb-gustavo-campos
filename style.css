@@ -16,6 +16,7 @@ body {
 .container {
   display: flex;
   width: 100%;
+  max-width: 1200px;
   height: auto;
   justify-items: center;
   align-items: center;
@@ -36,6 +37,8 @@ body {
   grid-template-columns: 1fr;
   grid-template-rows: repeat(var(--discos), 40px);
 }
+
+/* TODO: Usar lerp a partir de tamanho min e max */
 
 .disco[data-ativo="true"] {
   display: flex;
