@@ -152,10 +152,8 @@ export class TorreHanoi {
     const indiceJogadaSelecionada =
       this._historico.length - 1 - this._jogadasVoltadas;
 
-    const indiceJogadaAnterior = indiceJogadaSelecionada - 1;
-
-    const jogadaAnterior = this._historico[indiceJogadaAnterior];
-    return this.obterMovimentoInverso(jogadaAnterior);
+    const jogadaSelecionada = this._historico[indiceJogadaSelecionada];
+    return this.obterMovimentoInverso(jogadaSelecionada);
   }
 
   obterJogadaAvanco() {
