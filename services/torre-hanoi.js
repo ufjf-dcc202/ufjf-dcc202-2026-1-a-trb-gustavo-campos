@@ -4,8 +4,16 @@ export const NOMES_HASTES = ["a", "b", "c"];
 // Estado do tabuleiro
 
 export class TorreHanoi {
+  
+  _base = {
+    a: { discos: [] },
+    b: { discos: [] },
+    c: { discos: [] },
+  };
+
   _qtdDiscos = null;
-  _base = null;
+  _historico = [];
+  _jogadasVoltadas = 0;
 
   constructor(qtdDiscos) {
     this._qtdDiscos = qtdDiscos;
@@ -15,21 +23,94 @@ export class TorreHanoi {
       return { tamanho };
     });
 
-    this._base = {
-      a: { discos: discosIniciais },
-      b: { discos: [] },
-      c: { discos: [] },
-    };
+    this._base.a.discos = discosIniciais;
   }
 
-  moverDisco(origem, destino) {
+  // Public
+
+  jogar({ origem, destino }) {
+    if (this._jogadasVoltadas > 0) {
+      // TODO: limpar histórico posterior e zerar jogadas voltadas
+    }
+
+    const result = this.moverDisco({ origem, destino });
+
+    // Adicionar ao histórico
+    if (result.sucesso) {
+      this._historico = [
+        ...this._historico,
+        {
+          origem,
+          destino,
+        },
+      ];
+    }
+
+    return result;
+  }
+
+  voltar() {
+    const podeVoltar = this._jogadasVoltadas < this._historico.length;
+    if (!podeVoltar) return;
+
+    const jogadaRetrocesso = this.obterJogadaRetrocesso();
+
+    this.moverDisco(jogadaRetrocesso);
+    this._jogadasVoltadas++;
+  }
+
+  avancar() {
+    const podeAvancar = this._jogadasVoltadas > 0;
+    if (!podeAvancar) return;
+
+    const jogadaAvanco = this.obterJogadaAvanco();
+
+    this.moverDisco(jogadaAvanco);
+    this._jogadasVoltadas--;
+  }
+
+  obterPosicoesDiscos() {
+    return Object.entries(this._base).flatMap(([nomeHaste, hastes]) => {
+      return hastes.discos.map((disco, ordem) => ({
+        nomeHaste,
+        ordem,
+        tamanho: disco.tamanho,
+      }));
+    });
+  }
+
+  toString() {
+    let totalStr = "";
+
+    for (let level = this._qtdDiscos; level > 0; level--) {
+      for (const nomeHaste of NOMES_HASTES) {
+        const disco = this._base[nomeHaste].discos[level - 1];
+        const char = disco?.tamanho ?? EMPTY_CHAR;
+        totalStr += char + "    ";
+      }
+
+      totalStr += "\n";
+    }
+
+    return totalStr;
+  }
+
+  get qtdDiscos() {
+    return this._qtdDiscos;
+  }
+
+  // Private
+
+  moverDisco({ origem, destino }) {
     if (
       [origem, destino].some((nomeHaste) => !NOMES_HASTES.includes(nomeHaste))
     )
-      throw new Error("Origem ou destino só podem ser " + NOMES_HASTES.join(", "));
+      throw new Error(
+        "Origem ou destino só podem ser " + NOMES_HASTES.join(", "),
+      );
 
     if (origem === destino)
-            return {
+      return {
         sucesso: false,
         erro: "A haste de destino deve ser diferente da haste de origem",
       };
@@ -59,45 +140,31 @@ export class TorreHanoi {
     return { sucesso: true };
   }
 
-  // obterEstado() {
-  //   const copiarHaste = (haste) => ({
-  //     discos: [...haste.discos.map((disco) => structuredClone(disco))],
-  //   });
-
-  //   return {
-  //     a: copiarHaste(this._base.a),
-  //     b: copiarHaste(this._base.b),
-  //     c: copiarHaste(this._base.c),
-  //   };
-  // }
-
-  obterPosicoesDiscos() {
-    return Object.entries(this._base).flatMap (([nomeHaste, hastes]) => {
-      return hastes.discos.map((disco, ordem) => ({
-        nomeHaste,
-        ordem,
-        tamanho: disco.tamanho,
-      }));
-    });
+  obterMovimentoInverso({ origem, destino }) {
+    return {
+      origem: destino,
+      destino: origem,
+    };
   }
 
-  toString() {
-    let totalStr = "";
+  obterJogadaRetrocesso() {
+    /* Obtém a jogada responsável por voltar pro estado anterior */
+    const indiceJogadaSelecionada =
+      this._historico.length - 1 - this._jogadasVoltadas;
 
-    for (let level = this._qtdDiscos; level > 0; level--) {
-      for (const nomeHaste of NOMES_HASTES) {
-        const disco = this._base[nomeHaste].discos[level - 1];
-        const char = disco?.tamanho ?? EMPTY_CHAR;
-        totalStr += char + "  ";
-      }
+    const indiceJogadaAnterior = indiceJogadaSelecionada - 1;
 
-      totalStr += "\n";
-    }
-
-    return totalStr;
+    const jogadaAnterior = this._historico[indiceJogadaAnterior];
+    return this.obterMovimentoInverso(jogadaAnterior);
   }
 
-  get qtdDiscos() {
-    return this._qtdDiscos;
+  obterJogadaAvanco() {
+    /* Obtém a jogada responsável por avançar pro próximo estado */
+    const indiceJogadaSelecionada =
+      this._historico.length - 1 - this._jogadasVoltadas;
+
+    const indiceJogadaProxima = indiceJogadaSelecionada + 1;
+
+    return this._historico[indiceJogadaProxima];
   }
 }
