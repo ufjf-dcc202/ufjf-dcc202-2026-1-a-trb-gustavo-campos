@@ -59,7 +59,7 @@ function reiniciar() {
     b: document.querySelector(".discos-haste-b"),
     c: document.querySelector(".discos-haste-c"),
   };
-  
+
   // Criando elementos e setando valores padrões nos mesmos
 
   NOMES_HASTES.forEach((nomeHaste) => {
@@ -136,7 +136,7 @@ function atualizarVisualizacao() {
     a: getTamanhoDiscoTopo("a"),
     b: getTamanhoDiscoTopo("b"),
     c: getTamanhoDiscoTopo("c"),
-  }
+  };
 
   // Setar disco suspenso selecionado
   Object.entries(elementosVisualizacao.discosSuspensos).forEach(
@@ -166,14 +166,32 @@ function atualizarVisualizacao() {
 
   const historico = torreHanoi.obterHistorico();
 
-  const stringHistorico = historico.reduce(
-    (acc, movimento) =>
-      acc +
-      `\n${movimento.selecionado ? "*" : ""} ${movimento.origem} -> ${movimento.destino}`,
-    "",
-  );
+  elementosVisualizacao.historicoJogo.innerHTML = ""; // limpa
 
+  historico.forEach((movimento, index) => {
+    const linha = document.createElement("div");
+    linha.className = "linha-historico";
+    linha.dataset.selecionado = movimento.selecionado;
+
+    const spanOrdem = document.createElement("span");
+    spanOrdem.className = "ordem";
+    spanOrdem.textContent = index + 1;
+
+    const spanMovimento = document.createElement("span");
+    spanMovimento.className = "movimento";
+    spanMovimento.textContent = `${movimento.origem} → ${movimento.destino}`;
+
+    linha.append(spanOrdem, spanMovimento);
+    elementosVisualizacao.historicoJogo.appendChild(linha);
+
+    // Faz com que o scroll no elemento pai role para manter este elemento visível
+    if (movimento.selecionado) linha.scrollIntoView({ block: "nearest" });
+  });
+
+  // Setar e rolar pra baixo automaticamente
   elementosVisualizacao.historicoJogo.innerText = stringHistorico;
+  elementosVisualizacao.historicoJogo.scrollTop =
+    elementosVisualizacao.historicoJogo.scrollHeight;
 
   // Setando disabled dos botões
 

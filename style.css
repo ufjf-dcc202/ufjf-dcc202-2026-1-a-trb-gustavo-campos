@@ -13,7 +13,7 @@ body {
 }
 
 h1 {
-  margin-top: 100px;
+  margin-top: 70px;
   font-size: 3em;
 }
 
@@ -21,7 +21,7 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 30px;
   width: 100%;
   max-width: 1000px;
   height: auto;
@@ -60,8 +60,8 @@ h1 {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 20px; 
-  background-color: #333; 
+  width: 20px;
+  background-color: #333;
   z-index: 0;
   border-radius: 40px 40px 0px 0px;
 }
@@ -76,7 +76,7 @@ h1 {
   grid-template-rows: repeat(var(--discos), 40px);
 }
 
-/* TODO: Usar lerp a partir de tamanho min e max */
+/* Disco */
 
 .disco {
   display: flex;
@@ -117,4 +117,52 @@ h1 {
 .disco[data-tamanho="6"] {
   background-color: navy;
   width: 100%;
+}
+
+/* Histórico */
+
+h3 {
+  margin: 5px 0px;
+}
+
+.container-historico {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+  width: 300px;
+  border: 1px solid #333;
+}
+
+.historico-jogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+  overflow-y: auto;
+  width: 100%;
+  border: 1px solid #333 ;
+}
+
+.linha-historico {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.linha-historico[data-selecionado="true"] {
+  background-color: #ddd;
+  font-weight: bold;
+}
+
+.controles {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.botao-voltar, .botao-avancar {
+  width: 100%;
+  font-size: 1.1em;
 }
