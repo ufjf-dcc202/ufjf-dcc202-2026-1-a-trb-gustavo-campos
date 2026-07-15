@@ -7,17 +7,23 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-color: cornflowerblue;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+h1 {
+  margin-top: 100px;
+  font-size: 3em;
+}
+
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   height: auto;
   justify-items: center;
   align-items: center;
@@ -41,7 +47,28 @@ body {
   justify-items: center;
 }
 
+.haste {
+  padding-top: 30px;
+  position: relative;
+  width: 100%;
+}
+
+.haste::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px; 
+  background-color: #333; 
+  z-index: 0;
+  border-radius: 40px 40px 0px 0px;
+}
+
 .discos-haste {
+  position: relative;
+  z-index: 1;
   display: grid;
   width: 100%;
   row-gap: 2px;
@@ -53,7 +80,8 @@ body {
 
 .disco {
   display: flex;
-  height: 40px;
+  height: 38px;
+  border-radius: 20px 20px 10px 10px;
 }
 
 .disco:not([data-tamanho]) {
