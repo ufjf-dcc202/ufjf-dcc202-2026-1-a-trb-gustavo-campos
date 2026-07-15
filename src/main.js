@@ -25,7 +25,6 @@ function tratarClique(nomeHaste) {
         origem: hasteSelecionada,
         destino: nomeHaste,
       });
-      definirMensagemDeErro(resultado);
     }
     hasteSelecionada = null;
   } else {
@@ -45,11 +44,6 @@ function tratarCliqueAvancar() {
   atualizarVisualizacao(torreHanoi, elementosVisualizacao);
 }
 
-function definirMensagemDeErro(resultado) {
-  if (resultado.sucesso) elementosVisualizacao.erroJogo.textContent = "";
-  else elementosVisualizacao.erroJogo.textContent = resultado.erro;
-}
-
 // VISUALIZAÇÃO
 
 function reiniciar() {
@@ -65,7 +59,7 @@ function reiniciar() {
     b: document.querySelector(".discos-haste-b"),
     c: document.querySelector(".discos-haste-c"),
   };
-
+  
   // Criando elementos e setando valores padrões nos mesmos
 
   NOMES_HASTES.forEach((nomeHaste) => {
@@ -93,9 +87,6 @@ function reiniciar() {
     c: document.querySelector(".suspensor-discos .disco-c"),
   };
 
-  // Obtendo log
-  const erroJogo = document.querySelector(".erro-jogo");
-
   // Obtendo historico
   const historicoJogo = document.querySelector(".historico-jogo");
 
@@ -117,7 +108,6 @@ function reiniciar() {
     elemTabuleiro,
     elemHastes,
     elemDiscosDaHaste,
-    erroJogo,
     historicoJogo,
     botaoVoltar,
     botaoAvancar,
