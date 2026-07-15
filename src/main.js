@@ -88,6 +88,12 @@ function reiniciar() {
     c: document.querySelectorAll(".haste-c .disco"),
   };
 
+  const discosSuspensos = {
+    a: document.querySelector(".suspensor-discos .disco-a"),
+    b: document.querySelector(".suspensor-discos .disco-b"),
+    c: document.querySelector(".suspensor-discos .disco-c"),
+  };
+
   // Obtendo log
   const erroJogo = document.querySelector(".erro-jogo");
 
@@ -116,6 +122,7 @@ function reiniciar() {
     historicoJogo,
     botaoVoltar,
     botaoAvancar,
+    discosSuspensos,
   };
 
   atualizarVisualizacao();
@@ -139,12 +146,16 @@ function atualizarVisualizacao() {
 
   // Setando discos de acordo com estado
 
+  const tamanhoDiscoSelecionado = getTamanhoDiscoTopo(hasteSelecionada);
+
   dadosDiscos.forEach((dadosDisco) => {
     const elemDiscos = elementosVisualizacao.elemDiscosDaHaste;
     const indice = ordemParaIndice(dadosDisco.ordem);
     const elemDisco = elemDiscos[dadosDisco.nomeHaste][indice];
 
-    elemDisco.dataset.ativo = true;
+    const ehSelecionado = dadosDisco.nomeHaste === hasteSelecionada && tamanhoDiscoSelecionado === dadosDisco.tamanho;
+
+    elemDisco.dataset.ativo = !ehSelecionado;
     elemDisco.dataset.tamanho = dadosDisco.tamanho;
   });
 
@@ -152,12 +163,46 @@ function atualizarVisualizacao() {
 
   const historico = torreHanoi.obterHistorico();
 
-  console.log(historico)
-
   const stringHistorico = historico.reduce(
-    (acc, movimento) => acc + `\n${movimento.selecionado ? "*" : ""} ${movimento.origem} -> ${movimento.destino}`,
+    (acc, movimento) =>
+      acc +
+      `\n${movimento.selecionado ? "*" : ""} ${movimento.origem} -> ${movimento.destino}`,
     "",
   );
 
   elementosVisualizacao.historicoJogo.innerText = stringHistorico;
+
+  // Setando disabled dos botões
+
+  // Se estiver antes do primeiro movimento)
+  elementosVisualizacao.botaoVoltar.disabled = historico.every(
+    (movimento) => !movimento.selecionado,
+  );
+  // Se está o mais avançado o possível
+  elementosVisualizacao.botaoAvancar.disabled =
+    historico.length === 0 || historico.at(-1).selecionado;
+
+  // Setar disco suspenso selecionado
+  Object.entries(elementosVisualizacao.discosSuspensos).forEach(
+    ([nomeHaste, elemDisco]) => {
+      if (hasteSelecionada === nomeHaste) {
+        elemDisco.dataset.tamanho = getTamanhoDiscoTopo(nomeHaste);
+        elemDisco.dataset.ativo = true;
+      } else {
+        elemDisco.dataset.tamanho = null;
+        elemDisco.dataset.ativo = false;
+      }
+    },
+  );
+}
+
+// HELPERS
+
+function getTamanhoDiscoTopo(nomeHaste) {
+  const dadosDiscos = torreHanoi.obterPosicoesDiscos();
+  const maiorDiscoHaste = dadosDiscos
+    .sort((discoA, discoB) => discoA.tamanho - discoB.tamanho)
+    .find((disco) => disco.nomeHaste === nomeHaste);
+
+  return maiorDiscoHaste?.tamanho ?? null;
 }
