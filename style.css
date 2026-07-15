@@ -21,6 +21,7 @@ body {
   height: auto;
   justify-items: center;
   align-items: center;
+  gap: 20px;
 }
 
 .tabuleiro {
@@ -40,7 +41,7 @@ body {
   justify-items: center;
 }
 
-.haste {
+.discos-haste {
   display: grid;
   width: 100%;
   row-gap: 2px;
@@ -55,37 +56,37 @@ body {
   height: 40px;
 }
 
-.disco[data-ativo="true"] {
+.disco:not([data-tamanho]) {
   background-color: black;
   width: 100%;
 }
 
-.disco[data-ativo="true"][data-tamanho="1"] {
+.disco[data-tamanho="1"] {
   background-color: green;
   width: 25%;
 }
 
-.disco[data-ativo="true"][data-tamanho="2"] {
+.disco[data-tamanho="2"] {
   background-color: red;
   width: 40%;
 }
 
-.disco[data-ativo="true"][data-tamanho="3"] {
+.disco[data-tamanho="3"] {
   background-color: orange;
   width: 55%;
 }
 
-.disco[data-ativo="true"][data-tamanho="4"] {
+.disco[data-tamanho="4"] {
   background-color: yellow;
   width: 70%;
 }
 
-.disco[data-ativo="true"][data-tamanho="5"] {
+.disco[data-tamanho="5"] {
   background-color: greenyellow;
   width: 85%;
 }
 
-.disco[data-ativo="true"][data-tamanho="6"] {
+.disco[data-tamanho="6"] {
   background-color: navy;
   width: 100%;
 }

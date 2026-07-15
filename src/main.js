@@ -61,9 +61,9 @@ function reiniciar() {
   elemTabuleiro.style.setProperty("--discos", torreHanoi.qtdDiscos);
 
   const elemHastes = {
-    a: document.querySelector(".haste-a"),
-    b: document.querySelector(".haste-b"),
-    c: document.querySelector(".haste-c"),
+    a: document.querySelector(".discos-haste-a"),
+    b: document.querySelector(".discos-haste-b"),
+    c: document.querySelector(".discos-haste-c"),
   };
 
   // Criando elementos e setando valores padrões nos mesmos
@@ -75,7 +75,6 @@ function reiniciar() {
       elemDisco.className = "disco";
 
       const ehColunaA = nomeHaste === "a";
-      elemDisco.dataset.ativo = ehColunaA ? true : false;
       elemDisco.dataset.tamanho = ehColunaA ? i + 1 : undefined;
 
       elemHastes[nomeHaste].appendChild(elemDisco);
@@ -83,9 +82,9 @@ function reiniciar() {
   });
 
   const elemDiscosDaHaste = {
-    a: document.querySelectorAll(".haste-a .disco"),
-    b: document.querySelectorAll(".haste-b .disco"),
-    c: document.querySelectorAll(".haste-c .disco"),
+    a: document.querySelectorAll(".discos-haste-a .disco"),
+    b: document.querySelectorAll(".discos-haste-b .disco"),
+    c: document.querySelectorAll(".discos-haste-c .disco"),
   };
 
   const discosSuspensos = {
@@ -139,24 +138,38 @@ function atualizarVisualizacao() {
 
   Object.values(elementosVisualizacao.elemDiscosDaHaste).map((elemDiscos) => {
     elemDiscos.forEach((elemDisco) => {
-      elemDisco.dataset.ativo = false;
       elemDisco.dataset.tamanho = null;
     });
   });
 
-  // Setando discos de acordo com estado
+  const tamanhoDiscoTopoDaHaste = {
+    a: getTamanhoDiscoTopo("a"),
+    b: getTamanhoDiscoTopo("b"),
+    c: getTamanhoDiscoTopo("c"),
+  }
 
-  const tamanhoDiscoSelecionado = getTamanhoDiscoTopo(hasteSelecionada);
+  // Setar disco suspenso selecionado
+  Object.entries(elementosVisualizacao.discosSuspensos).forEach(
+    ([nomeHaste, elemDisco]) => {
+      if (hasteSelecionada === nomeHaste) {
+        elemDisco.dataset.tamanho = tamanhoDiscoTopoDaHaste[nomeHaste];
+      } else {
+        elemDisco.dataset.tamanho = null;
+      }
+    },
+  );
 
+  // Setando discos das hastes de acordo com estado
   dadosDiscos.forEach((dadosDisco) => {
     const elemDiscos = elementosVisualizacao.elemDiscosDaHaste;
     const indice = ordemParaIndice(dadosDisco.ordem);
     const elemDisco = elemDiscos[dadosDisco.nomeHaste][indice];
 
-    const ehSelecionado = dadosDisco.nomeHaste === hasteSelecionada && tamanhoDiscoSelecionado === dadosDisco.tamanho;
+    const estaSelecionado =
+      dadosDisco.nomeHaste === hasteSelecionada &&
+      tamanhoDiscoTopoDaHaste[hasteSelecionada] === dadosDisco.tamanho;
 
-    elemDisco.dataset.ativo = !ehSelecionado;
-    elemDisco.dataset.tamanho = dadosDisco.tamanho;
+    elemDisco.dataset.tamanho = estaSelecionado ? null : dadosDisco.tamanho;
   });
 
   // Setando histórico de acordo com o estado
@@ -181,19 +194,6 @@ function atualizarVisualizacao() {
   // Se está o mais avançado o possível
   elementosVisualizacao.botaoAvancar.disabled =
     historico.length === 0 || historico.at(-1).selecionado;
-
-  // Setar disco suspenso selecionado
-  Object.entries(elementosVisualizacao.discosSuspensos).forEach(
-    ([nomeHaste, elemDisco]) => {
-      if (hasteSelecionada === nomeHaste) {
-        elemDisco.dataset.tamanho = getTamanhoDiscoTopo(nomeHaste);
-        elemDisco.dataset.ativo = true;
-      } else {
-        elemDisco.dataset.tamanho = null;
-        elemDisco.dataset.ativo = false;
-      }
-    },
-  );
 }
 
 // HELPERS
