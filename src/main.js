@@ -19,6 +19,10 @@ reiniciar();
 // INPUT
 
 function tratarClique(nomeHaste) {
+
+  const poscicoesDiscos = torreHanoi.obterPosicoesDiscos();
+  const hasteVazia = (nomeHaste) => !poscicoesDiscos.some(disco => disco.nomeHaste === nomeHaste);
+
   if (hasteSelecionada) {
     if (hasteSelecionada !== nomeHaste) {
       const resultado = torreHanoi.jogar({
@@ -27,7 +31,7 @@ function tratarClique(nomeHaste) {
       });
     }
     hasteSelecionada = null;
-  } else {
+  } else if (!hasteVazia(nomeHaste)) {
     hasteSelecionada = nomeHaste;
   }
 
