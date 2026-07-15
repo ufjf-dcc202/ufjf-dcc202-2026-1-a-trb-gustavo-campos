@@ -49,23 +49,21 @@ function tratarCliqueAvancar() {
 function reiniciar() {
   torreHanoi = new TorreHanoi(QTD_DISCOS);
 
-  // Obtendo elementos principais
-
+  // Setando variável CSS
   const elemTabuleiro = document.querySelector(".tabuleiro");
   elemTabuleiro.style.setProperty("--discos", torreHanoi.qtdDiscos);
 
+  // Obtendo elementos das hastes
   const elemHastes = {
     a: document.querySelector(".discos-haste-a"),
     b: document.querySelector(".discos-haste-b"),
     c: document.querySelector(".discos-haste-c"),
   };
 
-  // Criando elementos e setando valores padrões nos mesmos
-
+  // Criando elementos de discos e setando propriedades iniciais
   NOMES_HASTES.forEach((nomeHaste) => {
     Array.from({ length: torreHanoi.qtdDiscos }, (_, i) => {
       const elemDisco = document.createElement("div");
-
       elemDisco.className = "disco";
 
       const ehColunaA = nomeHaste === "a";
@@ -75,12 +73,14 @@ function reiniciar() {
     });
   });
 
+  // Obtendo discos das hastes que acabaram de ser criados
   const elemDiscosDaHaste = {
     a: document.querySelectorAll(".discos-haste-a .disco"),
     b: document.querySelectorAll(".discos-haste-b .disco"),
     c: document.querySelectorAll(".discos-haste-c .disco"),
   };
 
+  // Obtendo elementos que representam discos selecionados
   const discosSuspensos = {
     a: document.querySelector(".suspensor-discos .disco-a"),
     b: document.querySelector(".suspensor-discos .disco-b"),
@@ -94,13 +94,13 @@ function reiniciar() {
   const botaoVoltar = document.querySelector(".botao-voltar");
   const botaoAvancar = document.querySelector(".botao-avancar");
 
-  // Adiciona listener às hastes
+  // Adicionar listener às hastes
   NOMES_HASTES.forEach((nomeHaste) => {
     const elemHaste = elemHastes[nomeHaste];
     elemHaste.addEventListener("click", (event) => tratarClique(nomeHaste));
   });
 
-  // Adiciona listernet aos botões
+  // Adicionar listerner aos botões
   botaoVoltar.addEventListener("click", (event) => tratarCliqueVoltar());
   botaoAvancar.addEventListener("click", (event) => tratarCliqueAvancar());
 
@@ -125,20 +125,20 @@ function atualizarVisualizacao() {
   const ordemParaIndice = (ordem) => torreHanoi.qtdDiscos - ordem - 1;
 
   // Resetando discos
-
   Object.values(elementosVisualizacao.elemDiscosDaHaste).map((elemDiscos) => {
     elemDiscos.forEach((elemDisco) => {
       elemDisco.dataset.tamanho = null;
     });
   });
 
+  // VVariável auxiliar
   const tamanhoDiscoTopoDaHaste = {
     a: getTamanhoDiscoTopo("a"),
     b: getTamanhoDiscoTopo("b"),
     c: getTamanhoDiscoTopo("c"),
   };
 
-  // Setar disco suspenso selecionado
+  // Setar tamanho do disco suspenso, se selecionado na coluna
   Object.entries(elementosVisualizacao.discosSuspensos).forEach(
     ([nomeHaste, elemDisco]) => {
       if (hasteSelecionada === nomeHaste) {
@@ -149,7 +149,7 @@ function atualizarVisualizacao() {
     },
   );
 
-  // Setando discos das hastes de acordo com estado
+  // Setando propriedades dos discos da haste de acordo com estado do jogo
   dadosDiscos.forEach((dadosDisco) => {
     const elemDiscos = elementosVisualizacao.elemDiscosDaHaste;
     const indice = ordemParaIndice(dadosDisco.ordem);
@@ -162,25 +162,30 @@ function atualizarVisualizacao() {
     elemDisco.dataset.tamanho = estaSelecionado ? null : dadosDisco.tamanho;
   });
 
-  // Setando histórico de acordo com o estado
+  // Criar elementos e setar histórico de acordo com o estado
 
   const historico = torreHanoi.obterHistorico();
-
-  elementosVisualizacao.historicoJogo.innerHTML = ""; // limpa
+  // Limpar
+  elementosVisualizacao.historicoJogo.innerHTML = "";
 
   historico.forEach((movimento, index) => {
+
+    // Criar linha do movimento
     const linha = document.createElement("div");
     linha.className = "linha-historico";
     linha.dataset.selecionado = movimento.selecionado;
 
+    // Elemento que representa ordem
     const spanOrdem = document.createElement("span");
     spanOrdem.className = "ordem";
     spanOrdem.textContent = index + 1;
 
+    // Elemento que representa movimentação
     const spanMovimento = document.createElement("span");
     spanMovimento.className = "movimento";
     spanMovimento.textContent = `${movimento.origem} → ${movimento.destino}`;
 
+    // Adicionar elementos na linha e no histórico
     linha.append(spanOrdem, spanMovimento);
     elementosVisualizacao.historicoJogo.appendChild(linha);
 
@@ -188,12 +193,7 @@ function atualizarVisualizacao() {
     if (movimento.selecionado) linha.scrollIntoView({ block: "nearest" });
   });
 
-  // Setar e rolar pra baixo automaticamente
-  elementosVisualizacao.historicoJogo.innerText = stringHistorico;
-  elementosVisualizacao.historicoJogo.scrollTop =
-    elementosVisualizacao.historicoJogo.scrollHeight;
-
-  // Setando disabled dos botões
+  // Setar disabled dos botões
 
   // Se estiver antes do primeiro movimento)
   elementosVisualizacao.botaoVoltar.disabled = historico.every(
